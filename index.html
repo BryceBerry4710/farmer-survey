@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farm Tech Survey</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --soil: #2C1A0E;
+    --wheat: #C9933A;
+    --wheat-light: #E8C47A;
+    --cream: #F5EDD8;
+    --green: #3A5C2C;
+    --green-light: #5A7E4A;
+    --paper: #FBF6EC;
+    --ink: #1A1008;
+  }
+
+  body {
+    background-color: var(--paper);
+    background-image:
+      radial-gradient(ellipse at 10% 20%, rgba(201,147,58,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 80%, rgba(58,92,44,0.07) 0%, transparent 50%);
+    font-family: 'Source Serif 4', Georgia, serif;
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 0 0 80px;
+  }
+
+  header {
+    background-color: var(--soil);
+    background-image: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 60px,
+      rgba(255,255,255,0.02) 60px,
+      rgba(255,255,255,0.02) 61px
+    );
+    padding: 52px 40px 44px;
+    text-align: center;
+    border-bottom: 5px solid var(--wheat);
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 0; right: 0;
+    height: 12px;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--wheat) 0px, var(--wheat) 12px,
+      transparent 12px, transparent 24px
+    );
+    opacity: 0.4;
+  }
+
+  .badge {
+    display: inline-block;
+    font-family: 'Source Serif 4', serif;
+    font-size: 10px;
+    font-weight: 300;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--wheat-light);
+    border: 1px solid rgba(201,147,58,0.4);
+    padding: 5px 14px;
+    margin-bottom: 18px;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 6vw, 58px);
+    font-weight: 900;
+    color: var(--cream);
+    line-height: 1.05;
+    letter-spacing: -1px;
+    margin-bottom: 14px;
+  }
+
+  h1 em {
+    color: var(--wheat);
+    font-style: italic;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    font-weight: 300;
+    color: rgba(245,237,216,0.7);
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.65;
+    font-style: italic;
+  }
+
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .intro-strip {
+    background: var(--green);
+    color: var(--cream);
+    text-align: center;
+    padding: 18px 24px;
+    font-size: 13.5px;
+    letter-spacing: 0.3px;
+    font-style: italic;
+    font-weight: 300;
+    border-bottom: 3px solid var(--green-light);
+  }
+
+  .cards-section {
+    margin-top: 48px;
+  }
+
+  .section-label {
+    font-family: 'Source Serif 4', serif;
+    font-size: 10px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--wheat);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--wheat), transparent);
+    opacity: 0.4;
+  }
+
+  .project-card {
+    background: white;
+    border: 1px solid rgba(44,26,14,0.1);
+    border-left: 5px solid var(--wheat);
+    margin-bottom: 24px;
+    padding: 30px 32px 28px;
+    position: relative;
+    transition: box-shadow 0.2s, transform 0.2s;
+    box-shadow: 0 2px 8px rgba(44,26,14,0.06);
+  }
+
+  .project-card:hover {
+    box-shadow: 0 8px 28px rgba(44,26,14,0.12);
+    transform: translateY(-2px);
+  }
+
+  .project-card.selected {
+    border-left-color: var(--green);
+    background: linear-gradient(135deg, #F0F7EC 0%, white 60%);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+
+  .card-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 700;
+    color: rgba(201,147,58,0.2);
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: -4px;
+  }
+
+  .card-title-wrap { flex: 1; }
+
+  .card-tag {
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--green);
+    font-weight: 400;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--soil);
+    line-height: 1.2;
+  }
+
+  .card-desc {
+    font-size: 14.5px;
+    line-height: 1.75;
+    color: #4A3828;
+    font-weight: 300;
+    margin-bottom: 22px;
+  }
+
+  .rating-section {
+    border-top: 1px dashed rgba(44,26,14,0.15);
+    padding-top: 20px;
+  }
+
+  .rating-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #8A7060;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .stars {
+    display: flex;
+    gap: 8px;
+  }
+
+  .star-btn {
+    background: none;
+    border: 2px solid rgba(201,147,58,0.3);
+    width: 40px;
+    height: 40px;
+    border-radius: 0;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    color: rgba(201,147,58,0.3);
+  }
+
+  .star-btn:hover,
+  .star-btn.lit {
+    background: var(--wheat);
+    border-color: var(--wheat);
+    color: white;
+  }
+
+  .interest-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    font-size: 10px;
+    color: #A09080;
+    letter-spacing: 1px;
+  }
+
+  .divider {
+    text-align: center;
+    color: rgba(201,147,58,0.35);
+    font-size: 20px;
+    letter-spacing: 8px;
+    margin: 8px 0 32px;
+  }
+
+  .comments-section {
+    margin-top: 48px;
+    background: white;
+    border: 1px solid rgba(44,26,14,0.1);
+    border-top: 4px solid var(--soil);
+    padding: 32px;
+    box-shadow: 0 2px 8px rgba(44,26,14,0.06);
+  }
+
+  .comments-section label {
+    display: block;
+    font-family: 'Playfair Display', serif;
+    font-size: 19px;
+    color: var(--soil);
+    margin-bottom: 8px;
+  }
+
+  .comments-hint {
+    font-size: 13px;
+    color: #8A7060;
+    font-style: italic;
+    margin-bottom: 16px;
+  }
+
+  textarea {
+    width: 100%;
+    height: 110px;
+    border: 1px solid rgba(44,26,14,0.15);
+    padding: 14px 16px;
+    font-family: 'Source Serif 4', serif;
+    font-size: 14px;
+    color: var(--ink);
+    resize: vertical;
+    background: var(--paper);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  textarea:focus { border-color: var(--wheat); }
+
+  .submit-row {
+    margin-top: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .submit-btn {
+    background: var(--soil);
+    color: var(--cream);
+    border: none;
+    padding: 16px 44px;
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: background 0.2s, transform 0.15s;
+  }
+
+  .submit-btn:hover {
+    background: var(--green);
+    transform: translateY(-1px);
+  }
+
+  .progress-wrap {
+    font-size: 12px;
+    color: #8A7060;
+    letter-spacing: 1px;
+  }
+
+  #progress-bar {
+    height: 3px;
+    background: rgba(44,26,14,0.08);
+    margin-top: 6px;
+    width: 160px;
+  }
+
+  #progress-fill {
+    height: 100%;
+    background: var(--wheat);
+    width: 0%;
+    transition: width 0.3s;
+  }
+
+  .thank-you {
+    display: none;
+    text-align: center;
+    padding: 64px 24px;
+  }
+
+  .thank-you .big-check {
+    font-size: 56px;
+    margin-bottom: 20px;
+  }
+
+  .thank-you h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    color: var(--soil);
+    margin-bottom: 12px;
+  }
+
+  .thank-you p {
+    font-size: 15px;
+    color: #6A5040;
+    font-style: italic;
+  }
+
+  @media (max-width: 560px) {
+    header { padding: 36px 20px 32px; }
+    .project-card { padding: 22px 20px 20px; }
+    .card-num { font-size: 32px; }
+    .card-title { font-size: 18px; }
+    .star-btn { width: 34px; height: 34px; font-size: 15px; }
+    .submit-row { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge">Farmer Feedback Survey</div>
+  <h1>Which tools would help<br><em>your farm</em> most?</h1>
+  <p class="subtitle">We're building software for crop farmers. Your input shapes what gets built first.</p>
+</header>
+
+<div class="intro-strip">
+  Rate each project from 1–5 stars based on how likely you'd be to purchase it. Takes about 2 minutes.
+</div>
+
+<div class="container">
+  <div class="cards-section" id="survey-form">
+
+    <br>
+    <div class="section-label">5 Project Ideas</div>
+
+    <!-- Card 1 -->
+    <div class="project-card" id="card-1">
+      <div class="card-header">
+        <div class="card-num">01</div>
+        <div class="card-title-wrap">
+          <span class="card-tag">Compliance &amp; Records</span>
+          <div class="card-title">Spray Log App</div>
+        </div>
+      </div>
+      <p class="card-desc">A mobile-friendly app that replaces paper spray records. Log pesticide and herbicide applications by field, date, product, and rate. Generates audit-ready reports for certification bodies and agronomists — no more scrambling through notebooks at inspection time.</p>
+      <div class="rating-section">
+        <span class="rating-label">How interested are you in this?</span>
+        <div class="stars" data-card="1">
+          <button class="star-btn" data-val="1">★</button>
+          <button class="star-btn" data-val="2">★</button>
+          <button class="star-btn" data-val="3">★</button>
+          <button class="star-btn" data-val="4">★</button>
+          <button class="star-btn" data-val="5">★</button>
+        </div>
+        <div class="interest-labels"><span>Not interested</span><span>Definitely would buy</span></div>
+      </div>
+    </div>
+
+    <div class="divider">· · ·</div>
+
+    <!-- Card 2 -->
+    <div class="project-card" id="card-2">
+      <div class="card-header">
+        <div class="card-num">02</div>
+        <div class="card-title-wrap">
+          <span class="card-tag">Risk &amp; Weather Alerts</span>
+          <div class="card-title">Frost Alert System</div>
+        </div>
+      </div>
+      <p class="card-desc">Monitors local weather forecasts and sends you a text or push notification the moment frost is predicted for your specific fields. Set your own temperature thresholds per crop type. Simple, reliable, and could save an entire season's worth of work in a single night.</p>
+      <div class="rating-section">
+        <span class="rating-label">How interested are you in this?</span>
+        <div class="stars" data-card="2">
+          <button class="star-btn" data-val="1">★</button>
+          <button class="star-btn" data-val="2">★</button>
+          <button class="star-btn" data-val="3">★</button>
+          <button class="star-btn" data-val="4">★</button>
+          <button class="star-btn" data-val="5">★</button>
+        </div>
+        <div class="interest-labels"><span>Not interested</span><span>Definitely would buy</span></div>
+      </div>
+    </div>
+
+    <div class="divider">· · ·</div>
+
+    <!-- Card 3 -->
+    <div class="project-card" id="card-3">
+      <div class="card-header">
+        <div class="card-num">03</div>
+        <div class="card-title-wrap">
+          <span class="card-tag">Business &amp; Finance</span>
+          <div class="card-title">Farm Profit Calculator</div>
+        </div>
+      </div>
+      <p class="card-desc">Track your real cost per acre — seed, fuel, chemicals, equipment hours, labor — against current commodity prices. See your true margin at a glance and run "what-if" scenarios before you plant. Built for farmers who are tired of guessing whether last season actually made money.</p>
+      <div class="rating-section">
+        <span class="rating-label">How interested are you in this?</span>
+        <div class="stars" data-card="3">
+          <button class="star-btn" data-val="1">★</button>
+          <button class="star-btn" data-val="2">★</button>
+          <button class="star-btn" data-val="3">★</button>
+          <button class="star-btn" data-val="4">★</button>
+          <button class="star-btn" data-val="5">★</button>
+        </div>
+        <div class="interest-labels"><span>Not interested</span><span>Definitely would buy</span></div>
+      </div>
+    </div>
+
+    <div class="divider">· · ·</div>
+
+    <!-- Card 4 -->
+    <div class="project-card" id="card-4">
+      <div class="card-header">
+        <div class="card-num">04</div>
+        <div class="card-title-wrap">
+          <span class="card-tag">Field Management</span>
+          <div class="card-title">Crop Rotation Planner</div>
+        </div>
+      </div>
+      <p class="card-desc">Plan your multi-year rotation across all your fields in one place. Get alerts when a planned rotation may deplete soil nitrogen, create pest pressure, or conflict with organic/GAP certification rules. Drag-and-drop your fields and crops by season with a visual calendar view.</p>
+      <div class="rating-section">
+        <span class="rating-label">How interested are you in this?</span>
+        <div class="stars" data-card="4">
+          <button class="star-btn" data-val="1">★</button>
+          <button class="star-btn" data-val="2">★</button>
+          <button class="star-btn" data-val="3">★</button>
+          <button class="star-btn" data-val="4">★</button>
+          <button class="star-btn" data-val="5">★</button>
+        </div>
+        <div class="interest-labels"><span>Not interested</span><span>Definitely would buy</span></div>
+      </div>
+    </div>
+
+    <div class="divider">· · ·</div>
+
+    <!-- Card 5 -->
+    <div class="project-card" id="card-5">
+      <div class="card-header">
+        <div class="card-num">05</div>
+        <div class="card-title-wrap">
+          <span class="card-tag">Equipment</span>
+          <div class="card-title">Equipment Maintenance Tracker</div>
+        </div>
+      </div>
+      <p class="card-desc">Log engine hours, service history, and upcoming maintenance for every piece of equipment on your farm. Get reminders before a service interval is due. Track repair costs over time to know when a machine is costing more than it's worth — and make smarter buy-vs-repair decisions.</p>
+      <div class="rating-section">
+        <span class="rating-label">How interested are you in this?</span>
+        <div class="stars" data-card="5">
+          <button class="star-btn" data-val="1">★</button>
+          <button class="star-btn" data-val="2">★</button>
+          <button class="star-btn" data-val="3">★</button>
+          <button class="star-btn" data-val="4">★</button>
+          <button class="star-btn" data-val="5">★</button>
+        </div>
+        <div class="interest-labels"><span>Not interested</span><span>Definitely would buy</span></div>
+      </div>
+    </div>
+
+    <!-- Comments -->
+    <div class="comments-section">
+      <label for="comments">Any other tools you wish existed?</label>
+      <p class="comments-hint">Optional — but very helpful. What's the biggest software headache on your farm right now?</p>
+      <textarea id="comments" placeholder="e.g. &quot;I wish I had something that tracked my seed inventory automatically...&quot;"></textarea>
+    </div>
+
+    <!-- Submit -->
+    <div class="submit-row">
+      <div class="progress-wrap">
+        <span id="progress-text">0 of 5 rated</span>
+        <div id="progress-bar"><div id="progress-fill"></div></div>
+      </div>
+      <button class="submit-btn" onclick="submitForm()">Submit Responses →</button>
+    </div>
+
+  </div>
+
+  <!-- Thank you -->
+  <div class="thank-you" id="thank-you">
+    <div class="big-check">🌾</div>
+    <h2>Thank you for your time.</h2>
+    <p>Your feedback will directly shape what gets built first.<br>We'll be in touch when the tools are ready.</p>
+  </div>
+
+</div>
+
+<script>
+  const ratings = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+
+  document.querySelectorAll('.stars').forEach(group => {
+    const card = parseInt(group.dataset.card);
+    const btns = group.querySelectorAll('.star-btn');
+
+    btns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const val = parseInt(btn.dataset.val);
+        ratings[card] = val;
+        btns.forEach(b => {
+          b.classList.toggle('lit', parseInt(b.dataset.val) <= val);
+        });
+        document.getElementById('card-' + card).classList.add('selected');
+        updateProgress();
+      });
+
+      btn.addEventListener('mouseenter', () => {
+        const val = parseInt(btn.dataset.val);
+        btns.forEach(b => {
+          if (parseInt(b.dataset.val) <= val) b.style.opacity = '0.7';
+        });
+      });
+
+      btn.addEventListener('mouseleave', () => {
+        btns.forEach(b => b.style.opacity = '');
+      });
+    });
+  });
+
+  function updateProgress() {
+    const rated = Object.values(ratings).filter(v => v > 0).length;
+    document.getElementById('progress-text').textContent = rated + ' of 5 rated';
+    document.getElementById('progress-fill').style.width = (rated / 5 * 100) + '%';
+  }
+
+  function submitForm() {
+    const rated = Object.values(ratings).filter(v => v > 0).length;
+    if (rated < 5) {
+      alert('Please rate all 5 projects before submitting. (' + (5 - rated) + ' remaining)');
+      return;
+    }
+    document.getElementById('survey-form').style.display = 'none';
+    document.getElementById('thank-you').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
